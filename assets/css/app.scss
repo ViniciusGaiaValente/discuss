@@ -71,3 +71,10 @@
 .alert:empty {
   display: none;
 }
+
+// Forms Styling
+
+.invalid-feedback {
+  color: #a94442;
+  text-transform: capitalize;
+}

@@ -1,0 +1,29 @@
+<div class="col s12">
+
+  <div class="row">
+    <h3> Topics </h1>
+  </div>
+
+  <div class="row">
+    <ul class="collection">
+
+      <%= for topic <- @topics do %>
+
+        <li class="collection-item">
+          <%= topic.title %>
+        </li>
+
+      <% end %>
+
+    </ul>
+  </div>
+
+  <div class="fixed-action-btn">
+    <%= link to: Routes.topic_path(@conn, :new), class: "btn-floating btn-large waves-effect waves-light red" do %>
+
+      <i class="material-icons">add</i>
+
+    <% end %>
+  </div>
+
+</div>

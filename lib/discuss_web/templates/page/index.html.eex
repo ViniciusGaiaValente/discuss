@@ -1,0 +1,11 @@
+<h3 class="center"> My Awesome Landing Page </h3>
+
+<div class="center">
+
+  <%= link to: Routes.topic_path(@conn, :index) do %>
+
+    <button class="waves-effect waves-light btn"> Join The Discussion </button>
+
+  <% end %>
+
+</div
