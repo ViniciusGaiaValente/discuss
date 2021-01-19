@@ -29,7 +29,13 @@
           <a href="" data-target="mobile-demo" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
 
           <ul id="nav-mobile" class="right">
-            <li> <%= link to: Routes.page_path(@conn, :index) do %> log-in <% end %> </li>
+
+            <%= if @conn.assigns[:user] do %>
+              <li> <%= link to: Routes.auth_path(@conn, :delete), method: :delete do %> Sing Out <% end %> </li>
+            <% else %>
+              <li> <%= link to: Routes.auth_path(@conn, :request, :github) do %> Sign In with Github <% end %> </li>
+            <% end %>
+
           </ul>
 
         </div>
