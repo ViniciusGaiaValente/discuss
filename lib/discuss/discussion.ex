@@ -2,7 +2,7 @@ defmodule Discuss.Discussion do
   @moduledoc """
   The Discussion context.
   """
-
+  import Ecto
   import Ecto.Query, warn: false
   alias Discuss.Repo
 
@@ -18,8 +18,9 @@ defmodule Discuss.Discussion do
     Repo.all(Topic)
   end
 
-  def create_topic(attrs \\ %{}) do
-    %Topic{}
+  def create_topic(user, attrs \\ %{}) do
+    user
+    |> build_assoc(:topics)
     |> Topic.changeset(attrs)
     |> Repo.insert()
   end

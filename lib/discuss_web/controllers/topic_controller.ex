@@ -4,7 +4,25 @@ defmodule DiscussWeb.TopicController do
   alias Discuss.Discussion
   alias Discuss.Discussion.Topic
 
+  plug DiscussWeb.Plugs.RequireAuth when action in [:new, :create, :edit, :update, :delete]
+  plug :require_ownership when action in [:update, :edit, :delete]
+
+  def require_ownership(conn, _params) do
+    %{params: %{"id" => topic_id}} = conn
+    %{id: user_id} = conn.assigns[:user]
+
+    if topic_id == user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Access denied, only the owner of this topic can access this operation.")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
+
   def index(conn, _params) do
+    IO.inspect(conn.assigns[:user])
     topics = Discussion.list_topics()
 
     render(conn, "index.html", topics: topics)
@@ -17,16 +35,33 @@ defmodule DiscussWeb.TopicController do
   end
 
   def create(conn, %{"topic" => topic_params}) do
-    case Discussion.create_topic(topic_params) do
+    case Discussion.create_topic(conn.assigns[:user], topic_params) do
+
       {:ok, _topic} ->
+
         conn
         |> put_flash(:info, "Topic created successfully.")
         |> redirect(to: Routes.topic_path(conn, :index))
 
       {:error, changeset} ->
-        conn
-        |> put_flash(:error, "Error, check the errors below.")
-        |> render("new.html", changeset: changeset)
+
+        case changeset.errors[:user] do
+
+          nil ->
+
+            conn
+            |> put_flash(:error, "Error, check the errors below.")
+            |> render("new.html", changeset: changeset)
+
+          _ ->
+
+            conn
+            |> put_flash(:error, "Something went wrong, please sign in again")
+            |> clear_session()
+            |> redirect(to: Routes.page_path(conn, :index))
+
+        end
+
     end
   end
 

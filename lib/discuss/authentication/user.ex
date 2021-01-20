@@ -7,7 +7,7 @@ defmodule Discuss.Authentication.User do
     field :provider, :string
     field :token, :string
 
-    timestamps()
+    has_many :topics, Discuss.Discussion.Topic
   end
 
   def changeset(user, attrs \\ %{}) do
